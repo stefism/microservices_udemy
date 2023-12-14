@@ -1,5 +1,6 @@
 ﻿using Mango.Services.CouponAPI.Data;
 using Mango.Services.CouponAPI.Models;
+using Mango.Services.CouponAPI.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.CouponAPI.Controllers
@@ -9,10 +10,12 @@ namespace Mango.Services.CouponAPI.Controllers
     public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly ResponseDto<CouponDto> _response;
 
         public CouponAPIController(AppDbContext db)
         {
             _db = db;
+            _response = new ResponseDto<CouponDto>();
         }
 
         [HttpGet]
