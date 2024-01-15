@@ -45,6 +45,7 @@ namespace Mango.Web.Controllers
 
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Coupon created successfully";
                     return RedirectToAction(nameof(CouponIndex));
                 }
                 else
@@ -54,6 +55,38 @@ namespace Mango.Web.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> CouponUpdate(int couponId)
+        {
+            ResponseDto? response = await _couponService.GetCouponByIdAsync(couponId);
+
+            if (response != null && response.IsSuccess)
+            {
+                CouponDto coupon = JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(response.Result));
+                return View(coupon);
+            }
+
+            return NotFound();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CouponUpdate(CouponDto couponDto)
+        {
+            ResponseDto? response = await _couponService.UpdateCouponAsync(couponDto);
+
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Coupon updated successfully";
+                return RedirectToAction(nameof(CouponIndex));
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+            }
+
+            return View(couponDto);
         }
 
         public async Task<IActionResult> CouponDelete(int couponId)
@@ -76,6 +109,7 @@ namespace Mango.Web.Controllers
 
             if (response != null && response.IsSuccess)
             {
+                TempData["success"] = "Coupon deleted successfully";
                 return RedirectToAction(nameof(CouponIndex));
             }
             else
