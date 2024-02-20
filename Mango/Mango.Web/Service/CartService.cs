@@ -14,7 +14,6 @@ namespace Mango.Web.Service
 
         public async Task<ResponseDto> ApplyCouponAsync(CartDto cartDto)
         {
-            var url = Helpers.ShoppingCartAPIBase + "/api/cart/TestTest";
             var result = await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = Enums.ApiType.POST,
@@ -23,6 +22,16 @@ namespace Mango.Web.Service
             });
 
             return result;
+        }
+
+        public async Task<ResponseDto> EmailCart(CartDto cartDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = Enums.ApiType.POST,
+                Url = Helpers.ShoppingCartAPIBase + "/api/cart/EmailCartRequest",
+                Data = cartDto
+            });
         }
 
         public async Task<ResponseDto> GetCartByUserAsync(string userId)
