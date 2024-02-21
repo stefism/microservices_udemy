@@ -1,4 +1,5 @@
-﻿using Mango.Services.AuthAPI.Models.Dto;
+﻿using Mango.MessageBus;
+using Mango.Services.AuthAPI.Models.Dto;
 using Mango.Services.AuthAPI.Services.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace Mango.Services.AuthAPI.Controllers
 	public class AuthAPIController : ControllerBase
 	{
 		private readonly IAuthService _authService;
+		private readonly IMessageBus _messageBus;
 		protected ResponseDto _response;
-		public AuthAPIController(IAuthService authService)
+		public AuthAPIController(IAuthService authService, IMessageBus messageBus)
 		{
 			_authService = authService;
+			_messageBus = messageBus;
 			_response = new();
 		}
 
