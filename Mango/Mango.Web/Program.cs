@@ -20,6 +20,7 @@ Helpers.CouponAPIBase = builder.Configuration["ServiceUrls:CouponAPI"];
 Helpers.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
 Helpers.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
 Helpers.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
+Helpers.OrderAPIBase = builder.Configuration["ServiceUrls:OrderAPI"];
 
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IBaseService, BaseService>();
