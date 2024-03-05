@@ -5,6 +5,7 @@ using Mango.Services.CouponAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,8 @@ builder.AddAppAuthentication();
 
 builder.Services.AddAuthorization();
 
+builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +63,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Value;
 
 app.UseHttpsRedirection();
 
