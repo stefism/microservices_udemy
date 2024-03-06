@@ -1,4 +1,5 @@
-﻿using Mango.Web.Models;
+﻿using Mango.Web.Enums;
+using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace Mango.Web.Controllers
             var response = await _orderService.CreateOrder(cart);
             OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
 
-            if(response != null && response.IsSuccess)
+            if (response != null && response.IsSuccess)
             {
                 //get stripe session and redirect to stripe to place order
                 string domain = Request.Scheme + "://" + Request.Host.Value + "/";
@@ -56,7 +57,7 @@ namespace Mango.Web.Controllers
 
                 ResponseDto stripeResponse = await _orderService.CreateStripeSession(stripeRequestDto);
                 StripeRequestDto stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDto>(Convert.ToString(stripeResponse.Result));
-                
+
                 Response.Headers.Add("Location", stripeResponseResult.StripeSessionUrl);
                 return new StatusCodeResult(303);
             }
@@ -66,6 +67,17 @@ namespace Mango.Web.Controllers
 
         public async Task<IActionResult> Confirmation(int orderId)
         {
+            ResponseDto? response = await _orderService.ValidateStripeSession(orderId);
+            if (response != null && response.IsSuccess)
+            {
+                OrderHeaderDto orderHeader = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
+                if (orderHeader.Status == Enum.GetName(OrderStatus.Approved))
+                {
+                    return View(orderId);
+                }
+            }
+
+            //redirect to some error page based on status
             return View(orderId);
         }
 
