@@ -37,34 +37,5 @@ namespace Mango.Services.RewardAPI.Services
                 throw;
             }
         }
-
-        public async Task RegisterUserEmailAndLog(string email)
-        {
-            string message = $"User with email \"{email}\" has been registered successfully.";
-            await LogAndEmail(message, "info@mangotest.com");
-        }
-
-        private async Task<bool> LogAndEmail(string message, string email)
-        {
-            try
-            {
-                EmailLogger emailLog = new()
-                {
-                    Email = email,
-                    EmailSentAt = DateTime.Now,
-                    Message = message
-                };
-
-                await using var _db = new AppDbContext(_dbOptions);
-                await _db.EmailLoggers.AddAsync(emailLog);
-                await _db.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
     }
 }
