@@ -33,10 +33,12 @@ namespace Mango.Web.Service
 
         public async Task<ResponseDto> UpdateOrderStatus(int orderId, string newStatus)
         {
+            var url = Helpers.OrderAPIBase + "/api/order/UpdateOrderStatus/" + orderId;
+
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = ApiType.POST,
-                Url = Helpers.OrderAPIBase + "/api/order/UpdateOrderStatus/" + orderId,
+                Url = url,
                 Data = newStatus
             });
         }

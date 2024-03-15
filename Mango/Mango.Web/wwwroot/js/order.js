@@ -1,13 +1,26 @@
-var dataTable;
+let dataTable;
 
 $(document).ready(function () {
-    loadDataTable();
+    const url = window.location.search;
+
+    if (url.includes("approved")) {
+        loadDataTable("approved");
+    }
+    else if (url.includes("readyforpickup")) {
+        loadDataTable("readyforpickup");
+    }
+    else if (url.includes("cancelled")) {
+        loadDataTable("cancelled");
+    }
+    else if (url.includes("all")) {
+        loadDataTable("all");
+    }
 });
 
-
-function loadDataTable() {
+function loadDataTable(status) {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: "/order/getall" },
+        order: [[0, 'desc']],
+        "ajax": { url: "/order/getall?status=" + status },
         "columns": [
             { data: 'orderHeaderId', "width": "5%" },
             { data: 'email', "width": "25%" },
