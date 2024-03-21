@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Mango.Services.ProductAPI;
 using Mango.Services.ProductAPI.Data;
 using Mango.Services.ProductAPI.Extensions;
@@ -65,6 +65,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles(); //Това казва, че ще се ползват файлове във wwwroot папката и ще има такава. При стартиране на проекта, зарежда от папката файловете.
 
 app.MapControllers();
 

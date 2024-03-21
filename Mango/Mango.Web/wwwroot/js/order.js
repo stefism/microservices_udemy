@@ -2,17 +2,11 @@ let dataTable;
 
 $(document).ready(function () {
     const url = window.location.search;
+    const status = url.split("=")[1];
 
-    if (url.includes("approved")) {
-        loadDataTable("approved");
-    }
-    else if (url.includes("readyforpickup")) {
-        loadDataTable("readyforpickup");
-    }
-    else if (url.includes("cancelled")) {
-        loadDataTable("cancelled");
-    }
-    else if (url.includes("all")) {
+    if (status != "all") {
+        loadDataTable(status);
+    } else {
         loadDataTable("all");
     }
 });

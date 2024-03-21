@@ -3,6 +3,7 @@
     var approved = "";
     var readyforpickup = "";
     var cancelled = "";
+    var completed = "";
     var all = "";
 
     switch (status)
@@ -15,6 +16,9 @@
             break;
         case "cancelled":
             cancelled = "active text-white bg-secondary";
+            break;
+        case "completed":
+            completed = "active text-white bg-secondary";
             break;
         default:
             all = "active text-white bg-secondary";
@@ -36,6 +40,9 @@
             </a>
             <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="cancelled">
             <li class="list-group-item @cancelled">Cancelled</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="completed">
+            <li class="list-group-item @completed">Completed</li>
             </a>
             <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="all">
             <li class="list-group-item @all">All</li>

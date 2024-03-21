@@ -77,18 +77,10 @@ namespace Mango.Web.Controllers
             {
                 list = JsonConvert.DeserializeObject<List<OrderHeaderDto>>(response.Result.ToString());
 
-                switch (status)
+                if (status != "undefined" && status != "all")
                 {
-                    case "approved":
-                        list = list.Where(order => order.Status == Enum.GetName(OrderStatus.Approved));
-                        break;
-                    case "readyforpickup":
-                        list = list.Where(order => order.Status == Enum.GetName(OrderStatus.ReadyForPickup));
-                        break;
-                    case "cancelled":
-                        list = list.Where(order => order.Status == Enum.GetName(OrderStatus.Cancelled));
-                        break;
-                }
+                    list = list.Where(order => order.Status.ToLower() == status);
+                }            
             }
             else
             {
