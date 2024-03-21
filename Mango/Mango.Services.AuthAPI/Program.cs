@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var computerName = GetComputerName();
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
-	option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+	option.UseSqlServer(builder.Configuration
+		.GetConnectionString(computerName == "StefanPc" ? "UNasConnection" : "URabotataConnection"));
 });
 
 // configure jwt class to get properties from appsettings.json
@@ -52,6 +54,11 @@ app.MapControllers();
 ApplyMigration();
 
 app.Run();
+
+string GetComputerName()
+{
+    return System.Net.Dns.GetHostName();
+}
 
 void ApplyMigration()
 {

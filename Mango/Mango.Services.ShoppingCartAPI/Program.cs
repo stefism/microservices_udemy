@@ -11,11 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var computerName = GetComputerName();
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    option.UseSqlServer(builder.Configuration
+        .GetConnectionString(computerName == "StefanPc" ? "UNasConnection" : "URabotataConnection"));
 });
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
@@ -93,6 +95,11 @@ app.MapControllers();
 ApplyMigration();
 
 app.Run();
+
+string GetComputerName()
+{
+    return System.Net.Dns.GetHostName();
+}
 
 void ApplyMigration()
 {
