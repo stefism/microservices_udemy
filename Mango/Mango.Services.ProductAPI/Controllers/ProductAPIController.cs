@@ -105,11 +105,39 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Put([FromBody] ProductDto productDto)
+        public ResponseDto Put(ProductDto productDto)
         {
             try
             {
                 Product currentProduct = _mapper.Map<Product>(productDto);
+
+                if (productDto.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(currentProduct.ImageLocalPath))
+                    {
+                        string currentProductFilePath = Path.Combine(Directory.GetCurrentDirectory(), currentProduct.ImageLocalPath);
+                        FileInfo file = new FileInfo(currentProductFilePath);
+
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    string fileName = currentProduct.ProductId + Path.GetExtension(productDto.Image.FileName);
+                    string filePath = @"wwwroot\ProductImages\" + fileName;
+                    string filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+
+                    string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    currentProduct.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+                    currentProduct.ImageLocalPath = filePath;
+                }
+
                 _db.Products.Update(currentProduct);
                 _db.SaveChanges();
 
@@ -131,6 +159,18 @@ namespace Mango.Services.ProductAPI.Controllers
         {
             try
             {
+                Product product = _db.Products.First(p => p.ProductId == id);
+                if(!string.IsNullOrEmpty(product.ImageLocalPath))
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                    FileInfo file = new FileInfo(filePath);
+
+                    if(file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
                 _db.Products.Remove(_db.Products.First(c => c.ProductId == id));
                 _db.SaveChanges();
             }
