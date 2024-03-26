@@ -60,12 +60,35 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] ProductDto productDto)
+        public ResponseDto Post(ProductDto productDto) //Нямаме [FromBody], защото може да има файл, а и при пост май всичко се пращаше в бодито.
         {
             try
             {
                 Product currentProduct = _mapper.Map<Product>(productDto);
                 _db.Products.Add(currentProduct);
+                _db.SaveChanges();
+
+                if(productDto.Image != null)
+                {
+                    string fileName = currentProduct.ProductId + Path.GetExtension(productDto.Image.FileName);
+                    string filePath = @"wwwroot\ProductImages\" + fileName;
+                    string filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                    using(var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+
+                    string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    currentProduct.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+                    currentProduct.ImageLocalPath = filePath;
+                } 
+                else
+                {
+                    currentProduct.ImageUrl = "hppts://placehold.co/600x400";
+                }
+
+                _db.Products.Update(currentProduct);
                 _db.SaveChanges();
 
                 _response.Result = _mapper.Map<ProductDto>(currentProduct);

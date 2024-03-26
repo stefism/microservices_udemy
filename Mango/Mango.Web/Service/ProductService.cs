@@ -1,4 +1,5 @@
-﻿using Mango.Web.Models;
+﻿using Mango.Web.Enums;
+using Mango.Web.Models;
 using Mango.Web.Service.IService;
 
 namespace Mango.Web.Service
@@ -18,7 +19,8 @@ namespace Mango.Web.Service
             {
                 ApiType = Enums.ApiType.POST,
                 Url = Helpers.ProductAPIBase + "/api/product",
-                Data = productDto
+                Data = productDto,
+                ContentType = ContentType.MultipartFormData
             });
         }
 
@@ -64,7 +66,8 @@ namespace Mango.Web.Service
             {
                 ApiType = Enums.ApiType.PUT,
                 Url = Helpers.ProductAPIBase + "/api/product",
-                Data = productDto
+                Data = productDto,
+                ContentType = ContentType.MultipartFormData
             });
         }
     }
