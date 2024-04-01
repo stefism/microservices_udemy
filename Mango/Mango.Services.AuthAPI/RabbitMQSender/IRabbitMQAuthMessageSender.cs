@@ -1,6 +1,7 @@
 ﻿namespace Mango.Services.AuthAPI.RabbitMQSender
 {
-    public class IRabbitMQAuthMessageSender
+    public interface IRabbitMQAuthMessageSender
     {
+        void SendMessage(Object message, string queueName);
     }
 }
